@@ -1,0 +1,1170 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zahra Music 🎧</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:"DM Sans",sans-serif;
+    color:#fff;
+    background:#09070d;
+    min-height:100vh;
+    overflow-x:hidden;
+}
+
+/* Background */
+.bg{
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    background:
+        radial-gradient(circle at 15% 15%,rgba(255,55,150,.18),transparent 30%),
+        radial-gradient(circle at 85% 25%,rgba(130,70,255,.18),transparent 30%),
+        linear-gradient(145deg,#08060b,#15101d 50%,#09070d);
+}
+
+.blob{
+    position:fixed;
+    width:350px;
+    height:350px;
+    border-radius:50%;
+    filter:blur(100px);
+    opacity:.16;
+    z-index:-1;
+    animation:blobMove 12s ease-in-out infinite alternate;
+}
+
+.blob.one{
+    background:#ff3e9d;
+    top:-100px;
+    left:-100px;
+}
+
+.blob.two{
+    background:#7d4dff;
+    bottom:-100px;
+    right:-100px;
+    animation-delay:2s;
+}
+
+@keyframes blobMove{
+    to{
+        transform:translate(100px,60px) scale(1.2);
+    }
+}
+
+/* Floating particles */
+.particles{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:0;
+}
+
+.particle{
+    position:absolute;
+    bottom:-30px;
+    animation:rise linear infinite;
+    opacity:.5;
+}
+
+@keyframes rise{
+    from{
+        transform:translateY(0) rotate(0deg);
+        opacity:0;
+    }
+    20%{opacity:.6;}
+    to{
+        transform:translateY(-110vh) rotate(360deg);
+        opacity:0;
+    }
+}
+
+/* App */
+.app{
+    width:min(1100px,100%);
+    margin:auto;
+    padding:25px 18px 150px;
+    position:relative;
+    z-index:2;
+}
+
+/* Header */
+.header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 5px 25px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:-1px;
+}
+
+.logo span{
+    color:#ff4fa8;
+}
+
+.header-pill{
+    padding:9px 14px;
+    border-radius:30px;
+    background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.1);
+    font-size:13px;
+    color:#bbb;
+}
+
+/* Hero */
+.hero{
+    padding:35px 5px 30px;
+}
+
+.hero .small{
+    color:#ff72b8;
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:3px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.hero h1{
+    font-family:Pacifico,cursive;
+    font-size:clamp(42px,8vw,72px);
+    line-height:1.15;
+    background:linear-gradient(90deg,#fff,#ff9bd0,#c5a6ff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:#aaa;
+    margin-top:12px;
+    max-width:600px;
+    line-height:1.7;
+}
+
+/* Mood grid */
+.section-title{
+    font-size:20px;
+    margin:25px 0 15px;
+}
+
+.moods{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+}
+
+.mood{
+    min-height:125px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:22px;
+    padding:18px;
+    color:white;
+    text-align:left;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    transition:.35s;
+    background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.035));
+}
+
+.mood:hover{
+    transform:translateY(-6px);
+    border-color:rgba(255,105,180,.4);
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+}
+
+.mood.active{
+    border-color:#ff55aa;
+    box-shadow:0 0 30px rgba(255,65,160,.18);
+}
+
+.mood .emoji{
+    font-size:30px;
+    display:block;
+    margin-bottom:15px;
+}
+
+.mood strong{
+    display:block;
+    font-size:15px;
+}
+
+.mood small{
+    display:block;
+    margin-top:5px;
+    color:#888;
+}
+
+/* Message overlay */
+.message-screen{
+    position:fixed;
+    inset:0;
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:25px;
+    background:rgba(4,3,7,.84);
+    backdrop-filter:blur(16px);
+}
+
+.message-screen.show{
+    display:flex;
+    animation:fadeIn .4s ease;
+}
+
+.message-card{
+    width:min(580px,100%);
+    text-align:center;
+    padding:55px 30px;
+    border-radius:32px;
+    background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,255,255,.04));
+    border:1px solid rgba(255,255,255,.13);
+    box-shadow:0 30px 100px rgba(0,0,0,.5);
+    animation:pop .65s cubic-bezier(.2,.8,.2,1);
+}
+
+.message-emoji{
+    font-size:55px;
+    margin-bottom:20px;
+    animation:bounce 1.2s infinite;
+}
+
+.message-card h2{
+    font-family:Pacifico,cursive;
+    font-size:clamp(30px,6vw,46px);
+    background:linear-gradient(90deg,#fff,#ff9bd0,#c5a6ff);
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.message-card p{
+    color:#bbb;
+    margin-top:15px;
+    line-height:1.7;
+}
+
+.message-card button{
+    margin-top:30px;
+    border:0;
+    padding:14px 25px;
+    border-radius:30px;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+    background:linear-gradient(135deg,#ff3e9d,#814cff);
+    transition:.3s;
+}
+
+.message-card button:hover{
+    transform:scale(1.05);
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+@keyframes pop{
+    from{
+        opacity:0;
+        transform:scale(.8) translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+@keyframes bounce{
+    50%{transform:translateY(-8px);}
+}
+
+/* Playlist */
+.playlist-section{
+    display:none;
+    margin-top:40px;
+    animation:playlistIn .7s ease;
+}
+
+.playlist-section.show{
+    display:block;
+}
+
+@keyframes playlistIn{
+    from{
+        opacity:0;
+        transform:translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.playlist-head{
+    display:flex;
+    align-items:end;
+    gap:20px;
+    margin-bottom:20px;
+}
+
+.cover{
+    width:145px;
+    height:145px;
+    flex:none;
+    border-radius:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:58px;
+    background:linear-gradient(145deg,#ff4fa8,#7147ff);
+    box-shadow:0 20px 50px rgba(255,70,160,.2);
+}
+
+.playlist-head h2{
+    font-size:32px;
+    margin-bottom:7px;
+}
+
+.playlist-head p{
+    color:#888;
+}
+
+/* Songs */
+.songs{
+    display:grid;
+    gap:6px;
+}
+
+.song{
+    display:grid;
+    grid-template-columns:45px 1fr auto;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.song:hover,
+.song.active{
+    background:rgba(255,255,255,.08);
+}
+
+.song-number{
+    color:#777;
+    text-align:center;
+    font-size:14px;
+}
+
+.song-icon{
+    width:48px;
+    height:48px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:21px;
+    background:linear-gradient(145deg,#27162b,#18121e);
+}
+
+.song-info{
+    min-width:0;
+}
+
+.song-info strong{
+    display:block;
+    font-size:15px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.song-info small{
+    color:#777;
+    display:block;
+    margin-top:3px;
+}
+
+.song-open{
+    color:#999;
+    font-size:13px;
+}
+
+/* Player */
+.player{
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:18px;
+    width:min(1000px,calc(100% - 25px));
+    z-index:40;
+    display:none;
+    padding:12px 15px;
+    border-radius:22px;
+    background:rgba(22,17,29,.9);
+    border:1px solid rgba(255,255,255,.12);
+    backdrop-filter:blur(20px);
+    box-shadow:0 15px 50px rgba(0,0,0,.5);
+}
+
+.player.show{
+    display:block;
+    animation:playerIn .5s ease;
+}
+
+@keyframes playerIn{
+    from{
+        opacity:0;
+        transform:translateX(-50%) translateY(30px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(-50%) translateY(0);
+    }
+}
+
+.player-top{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.player-art{
+    width:45px;
+    height:45px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#ff4fa8,#744cff);
+}
+
+.now{
+    flex:1;
+    min-width:0;
+}
+
+.now strong{
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.now small{
+    color:#777;
+}
+
+.controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.ctrl{
+    width:38px;
+    height:38px;
+    border:0;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    color:white;
+    cursor:pointer;
+}
+
+.ctrl.main{
+    background:#fff;
+    color:#111;
+}
+
+.progress{
+    height:4px;
+    margin-top:10px;
+    border-radius:10px;
+    background:#312a35;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    background:linear-gradient(90deg,#ff4fa8,#9a65ff);
+    transition:width:.3s linear;
+}
+
+/* YouTube player */
+.youtube-wrap{
+    display:none;
+    margin-top:25px;
+    border-radius:22px;
+    overflow:hidden;
+    background:#000;
+    aspect-ratio:16/9;
+}
+
+.youtube-wrap.show{
+    display:block;
+}
+
+.youtube-wrap iframe{
+    width:100%;
+    height:100%;
+    border:0;
+}
+
+/* Back */
+.back{
+    margin-top:25px;
+    border:0;
+    background:none;
+    color:#999;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.back:hover{
+    color:#fff;
+}
+
+/* Responsive */
+@media(max-width:850px){
+    .moods{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:600px){
+
+    .app{
+        padding:18px 13px 145px;
+    }
+
+    .header{
+        padding-bottom:10px;
+    }
+
+    .header-pill{
+        font-size:11px;
+    }
+
+    .hero{
+        padding-top:30px;
+    }
+
+    .moods{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .mood{
+        min-height:115px;
+    }
+
+    .playlist-head{
+        align-items:center;
+    }
+
+    .cover{
+        width:100px;
+        height:100px;
+        font-size:42px;
+    }
+
+    .playlist-head h2{
+        font-size:24px;
+    }
+
+    .song{
+        grid-template-columns:28px 42px 1fr;
+    }
+
+    .song-open{
+        display:none;
+    }
+
+    .player{
+        bottom:10px;
+        width:calc(100% - 16px);
+    }
+
+    .controls{
+        gap:3px;
+    }
+
+    .ctrl{
+        width:34px;
+        height:34px;
+    }
+}
+
+@media(max-width:380px){
+    .moods{
+        grid-template-columns:1fr 1fr;
+    }
+
+    .mood{
+        padding:14px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="blob one"></div>
+<div class="blob two"></div>
+
+<div class="particles" id="particles"></div>
+
+<div class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="logo">Zahra<span>Music</span> 🎧</div>
+        <div class="header-pill">Made specially for Zahra 💜</div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="small">Your personal music space</div>
+        <h1>What's your mood?</h1>
+        <p>
+            Pick a mood, Zahra.
+            I already have a little playlist waiting for you. 🎶
+        </p>
+    </section>
+
+    <!-- MOODS -->
+    <h3 class="section-title">Choose your mood</h3>
+
+    <div class="moods">
+
+        <button class="mood" onclick="selectMood('happy')">
+            <span class="emoji">🌸</span>
+            <strong>Happy</strong>
+            <small>Good vibes only</small>
+        </button>
+
+        <button class="mood" onclick="selectMood('sad')">
+            <span class="emoji">🌙</span>
+            <strong>Sad</strong>
+            <small>Soft hours</small>
+        </button>
+
+        <button class="mood" onclick="selectMood('angry')">
+            <span class="emoji">😤</span>
+            <strong>Angry</strong>
+            <small>Let it out</small>
+        </button>
+
+        <button class="mood" onclick="selectMood('romantic')">
+            <span class="emoji">💜</span>
+            <strong>Romantic</strong>
+            <small>Heart mode</small>
+        </button>
+
+        <button class="mood" onclick="selectMood('missing')">
+            <span class="emoji">🫶</span>
+            <strong>Missing Someone</strong>
+            <small>Someone on your mind</small>
+        </button>
+
+    </div>
+
+    <!-- PLAYLIST -->
+    <section class="playlist-section" id="playlistSection">
+
+        <div class="playlist-head">
+
+            <div class="cover" id="cover">🌸</div>
+
+            <div>
+                <div class="small" id="playlistLabel">PLAYLIST</div>
+                <h2 id="playlistTitle">Happy</h2>
+                <p id="playlistDescription">A little music for a better mood.</p>
+            </div>
+
+        </div>
+
+        <div class="songs" id="songs"></div>
+
+        <div class="youtube-wrap" id="youtubeWrap">
+            <iframe
+                id="youtube"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+
+        <button class="back" onclick="closePlaylist()">
+            ← Choose another mood
+        </button>
+
+    </section>
+
+</div>
+
+
+<!-- MESSAGE SCREEN -->
+<div class="message-screen" id="messageScreen">
+
+    <div class="message-card">
+
+        <div class="message-emoji" id="messageEmoji">🌸</div>
+
+        <h2 id="messageTitle">
+            Aww...
+        </h2>
+
+        <p id="messageText"></p>
+
+        <button onclick="openPlaylist()">
+            Show My Songs 🎧
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- PLAYER -->
+<div class="player" id="player">
+
+    <div class="player-top">
+
+        <div class="player-art" id="playerArt">🎵</div>
+
+        <div class="now">
+            <strong id="nowTitle">Choose a song</strong>
+            <small>Zahra Music</small>
+        </div>
+
+        <div class="controls">
+
+            <button class="ctrl" onclick="previousSong()">⏮</button>
+
+            <button class="ctrl main" onclick="togglePlay()" id="playButton">
+                ▶
+            </button>
+
+            <button class="ctrl" onclick="nextSong()">⏭</button>
+
+        </div>
+
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   FLOATING PARTICLES
+========================================= */
+
+const particleBox = document.getElementById("particles");
+
+const symbols = [
+    "💗","♡","✨","💜","🎵","🌸","💫"
+];
+
+for(let i=0;i<30;i++){
+
+    const particle = document.createElement("div");
+
+    particle.className = "particle";
+
+    particle.textContent =
+        symbols[Math.floor(Math.random()*symbols.length)];
+
+    particle.style.left =
+        Math.random()*100 + "%";
+
+    particle.style.fontSize =
+        (10 + Math.random()*18) + "px";
+
+    particle.style.animationDuration =
+        (8 + Math.random()*12) + "s";
+
+    particle.style.animationDelay =
+        Math.random()*10 + "s";
+
+    particleBox.appendChild(particle);
+}
+
+
+/* =========================================
+   SONG DATA
+========================================= */
+
+const playlists = {
+
+    happy:{
+        emoji:"🌸",
+        title:"Happy",
+        description:"Aww, Siraj ki wajah se happy ho? Hehe 💗",
+        songs:[
+            ["Happy Song 01","iShylfnfMWM"],
+            ["Happy Song 02","TyMUY2CDrjc"],
+            ["Happy Song 03","udgrClXV26Y"],
+            ["Happy Song 04","83pr5QLz6Bc"],
+            ["Happy Song 05","V1oczq_8L0E"]
+        ]
+    },
+
+    sad:{
+        emoji:"🌙",
+        title:"Sad",
+        description:"Sad ho? Siraj ko batao... shayad mood theek kar de 🥺💜",
+        songs:[
+            ["Sad Song 01","sVRwZEkXepg"],
+            ["Sad Song 02","_Bu9QLDTHX4"],
+            ["Sad Song 03","iF6L0mB1bEA"],
+            ["Sad Song 04","NlRrGrrRyNo"],
+            ["Sad Song 05","KQtMPONdxGs"]
+        ]
+    },
+
+    angry:{
+        emoji:"😤",
+        title:"Angry",
+        description:"Ohooo, kisne hamari Zahra ko gussa dila diya? 😭🔥",
+        songs:[
+            ["Angry Song 01","p9DQINKZxWE"],
+            ["Angry Song 02","Ps4aVpIESkc"],
+            ["Angry Song 03","AQJy_V3WD3k"],
+            ["Angry Song 04","vrqFJ-yjkRw"],
+            ["Angry Song 05","wuzTkiYJoNw"]
+        ]
+    },
+
+    romantic:{
+        emoji:"💜",
+        title:"Romantic",
+        description:"Awww... lagta hai aaj mood thora romantic hai 👀💗",
+        songs:[
+            ["Romantic Song 01","roTIGlu-AL8"],
+            ["Romantic Song 02","RalvLaiSZa0"],
+            ["Romantic Song 03","4F2jDMgioqk"],
+            ["Romantic Song 04","__ZvXBf1rmw"],
+            ["Romantic Song 05","Ov0YGGSY6gY"]
+        ]
+    },
+
+    missing:{
+        emoji:"🫶",
+        title:"Missing Someone",
+        description:"Someone missing? Hmm... Siraj ka naam kyun yaad aa raha hai? 🥹💜",
+        songs:[
+            ["Missing Song 01","TmRgK-pXH9c"],
+            ["Missing Song 02","KSGYVl4ZgRs"],
+            ["Missing Song 03","YiP8l60YjKc"],
+            ["Missing Song 04","ERt2HbNtW98"],
+            ["Missing Song 05","g23pmazHwgE"]
+        ]
+    }
+
+};
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let currentMood = null;
+let currentSong = 0;
+let isPlaying = false;
+
+
+/* =========================================
+   SELECT MOOD
+========================================= */
+
+function selectMood(mood){
+
+    currentMood = mood;
+
+    const data = playlists[mood];
+
+    document.getElementById("messageEmoji").textContent =
+        data.emoji;
+
+    document.getElementById("messageTitle").textContent =
+        data.title;
+
+    document.getElementById("messageText").textContent =
+        data.description;
+
+    document.getElementById("messageScreen")
+        .classList.add("show");
+}
+
+
+/* =========================================
+   OPEN PLAYLIST
+========================================= */
+
+function openPlaylist(){
+
+    document.getElementById("messageScreen")
+        .classList.remove("show");
+
+    const data = playlists[currentMood];
+
+    document.getElementById("playlistSection")
+        .classList.add("show");
+
+    document.getElementById("cover")
+        .textContent = data.emoji;
+
+    document.getElementById("playlistTitle")
+        .textContent = data.title;
+
+    document.getElementById("playlistDescription")
+        .textContent = data.description;
+
+    const songsBox =
+        document.getElementById("songs");
+
+    songsBox.innerHTML = "";
+
+    data.songs.forEach((song,index)=>{
+
+        const row = document.createElement("div");
+
+        row.className = "song";
+
+        row.onclick = function(){
+            playSong(index);
+        };
+
+        row.innerHTML = `
+            <div class="song-number">${index+1}</div>
+
+            <div class="song-icon">
+                🎵
+            </div>
+
+            <div class="song-info">
+                <strong>${song[0]}</strong>
+                <small>Tap to play on YouTube</small>
+            </div>
+
+            <div class="song-open">
+                ▶
+            </div>
+        `;
+
+        songsBox.appendChild(row);
+
+    });
+
+    currentSong = 0;
+
+    document.getElementById("playlistSection")
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"start"
+        });
+}
+
+
+/* =========================================
+   PLAY SONG
+========================================= */
+
+function playSong(index){
+
+    currentSong = index;
+
+    const data = playlists[currentMood];
+    const song = data.songs[index];
+
+    const iframe =
+        document.getElementById("youtube");
+
+    /*
+       YouTube embed URL.
+       The user supplied the YouTube links.
+    */
+
+    iframe.src =
+        "https://www.youtube.com/embed/" +
+        song[1] +
+        "?autoplay=1&rel=0";
+
+    document.getElementById("youtubeWrap")
+        .classList.add("show");
+
+    document.getElementById("player")
+        .classList.add("show");
+
+    document.getElementById("nowTitle")
+        .textContent = song[0];
+
+    document.getElementById("playerArt")
+        .textContent = data.emoji;
+
+    isPlaying = true;
+
+    document.getElementById("playButton")
+        .textContent = "❚❚";
+
+    highlightSong();
+
+    document.getElementById("youtubeWrap")
+        .scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+}
+
+
+/* =========================================
+   HIGHLIGHT CURRENT SONG
+========================================= */
+
+function highlightSong(){
+
+    document.querySelectorAll(".song")
+        .forEach((song,index)=>{
+
+            song.classList.toggle(
+                "active",
+                index === currentSong
+            );
+
+        });
+}
+
+
+/* =========================================
+   PLAY / PAUSE
+========================================= */
+
+function togglePlay(){
+
+    /*
+       Browsers don't allow reliable play/pause
+       control of YouTube iframe from normal JS
+       without the YouTube Player API.
+
+       So this button opens the current song
+       again when needed.
+    */
+
+    if(!currentMood) return;
+
+    playSong(currentSong);
+
+}
+
+
+/* =========================================
+   NEXT SONG
+========================================= */
+
+function nextSong(){
+
+    if(!currentMood) return;
+
+    const total =
+        playlists[currentMood].songs.length;
+
+    currentSong++;
+
+    if(currentSong >= total){
+        currentSong = 0;
+    }
+
+    playSong(currentSong);
+}
+
+
+/* =========================================
+   PREVIOUS SONG
+========================================= */
+
+function previousSong(){
+
+    if(!currentMood) return;
+
+    currentSong--;
+
+    if(currentSong < 0){
+        currentSong =
+            playlists[currentMood].songs.length - 1;
+    }
+
+    playSong(currentSong);
+}
+
+
+/* =========================================
+   CLOSE PLAYLIST
+========================================= */
+
+function closePlaylist(){
+
+    document.getElementById("playlistSection")
+        .classList.remove("show");
+
+    document.getElementById("youtubeWrap")
+        .classList.remove("show");
+
+    document.getElementById("youtube").src = "";
+
+    document.getElementById("player")
+        .classList.remove("show");
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================
+   ESCAPE MESSAGE
+========================================= */
+
+document.getElementById("messageScreen")
+.addEventListener("click",function(e){
+
+    if(e.target === this){
+        this.classList.remove("show");
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+```
